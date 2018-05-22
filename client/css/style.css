@@ -25,6 +25,18 @@ body {
   background: #607d8b;
   opacity: 0.3; }
 
+::-webkit-scrollbar {
+  width: 5px; }
+
+::-webkit-scrollbar-track {
+  background: transparent; }
+
+::-webkit-scrollbar-thumb {
+  background: #607d8b; }
+
+::-webkit-scrollbar-thumb:hover {
+  background: #78909c; }
+
 /* NAV */
 nav {
   background: #607d8b;
@@ -114,5 +126,92 @@ nav {
       cursor: pointer; }
       .profile p.logout:hover {
         text-decoration: underline; }
+
+.error-viewer {
+  background: #ffcdd2;
+  height: 30px;
+  cursor: pointer; }
+  .error-viewer p {
+    font-size: 16px;
+    padding: 5px 0;
+    color: #f44336; }
+
+.content {
+  height: calc(100vh - 80px); }
+  .content .wrap {
+    height: 100%; }
+  .content .contact-list {
+    width: 250px;
+    display: inline-block;
+    height: 100%;
+    float: left;
+    overflow-y: scroll; }
+    .content .contact-list .contact {
+      width: 100%;
+      height: 40px;
+      background: #fff; }
+      .content .contact-list .contact p {
+        font-size: 16px;
+        padding: 10px;
+        color: #607d8b;
+        display: inline-block; }
+        .content .contact-list .contact p.new-messages {
+          color: #f44336; }
+      .content .contact-list .contact input {
+        font-size: 16px;
+        padding: 5px;
+        margin: 20px 5px;
+        border: 1px solid #607d8b;
+        border-radius: 10px;
+        color: #607d8b; }
+        .content .contact-list .contact input:focus {
+          box-shadow: 0 0 10px; }
+      .content .contact-list .contact.hovered:hover {
+        background: #78909c; }
+        .content .contact-list .contact.hovered:hover p {
+          color: #fff; }
+      .content .contact-list .contact.input {
+        height: 70px; }
+  .content .chat {
+    width: calc(100% - 252px);
+    display: inline-block;
+    height: 100%;
+    float: left;
+    overflow-y: scroll;
+    position: relative; }
+    .content .chat .message-box {
+      height: calc(100% - 50px);
+      width: 100%; }
+      .content .chat .message-box .message {
+        width: 100%;
+        margin: 20px 0; }
+        .content .chat .message-box .message p {
+          font-size: 14px;
+          color: #78909c;
+          background: #fff;
+          border-radius: 2px;
+          margin: 0 20px;
+          padding: 5px;
+          display: inline-block; }
+          .content .chat .message-box .message p.to {
+            background: #78909c;
+            color: #fff; }
+    .content .chat .message-input {
+      height: 50px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      background: #78909c; }
+      .content .chat .message-input input {
+        font-size: 16px;
+        padding: 5px;
+        margin: 10px;
+        border: 1px solid #607d8b;
+        border-radius: 10px;
+        color: #607d8b;
+        background: #eceff1;
+        width: calc(100% - 40px); }
+        .content .chat .message-input input:focus {
+          box-shadow: 0 0 10px; }
 
 /*# sourceMappingURL=style.css.map */

@@ -34,6 +34,34 @@
       <p class="logout" v-on:click="logout()">[Logout]</p>
     </div>
   </div>
+  <div class="error-viewer" v-if="errorMessage.length != 0" v-on:click="errorMessage = ''">
+    <div class="wrap">
+      <p>{{errorMessage}}</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="wrap">
+      <div class="contact-list">
+        <div class="contact input">
+          <input type="text" placeholder="Add contact..." v-model="newContact" v-on:keyup.enter="addContact()">
+        </div>
+        <div class="contact hovered" v-for="contact in contacts">
+          <p class="username">{{contact['username']}}</p>
+          <p class="new-messages" v-if="contact['new'] != 0">{{contact['new']}}</p>
+        </div>
+      </div>
+      <div class="chat bb">
+        <div class="message-box">
+          <div class="message" v-for="message in messages">
+            <p v-bind:class="{ from: message['type'] == 'from', to: message['type'] == 'to' }">{{message['text']}}</p>
+          </div>
+        </div>
+        <div class="message-input">
+          <input type="text">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
   const socket = io();
@@ -47,6 +75,22 @@
       authTab: 'login',
       notAuth: true,
       username: '',
+      errorMessage: '',
+      newContact: '',
+      contacts: [
+        { username: 'Someone', id: '1', new: 0 },
+        { username: 'Harry', id: '1', new: 1 },
+        { username: 'Inokentii', id: '1', new: 0 },
+        { username: 'Snizhanna', id: '1', new: 2 },
+      ],
+      messages: [
+        { text: 'Lorem-huerem', type: 'to' },
+        { text: 'Lorem-huerem', type: 'to' },
+        { text: 'Lorem-huerem', type: 'from' },
+        { text: 'Lorem-huerem', type: 'to' },
+        { text: 'Lorem-huerem', type: 'from' },
+      ],
+      currentMessage: '',
     },
     created: function() {
       const token = localStorage.getItem('chatiqueue:token');
@@ -91,7 +135,7 @@
         this.authUsername = '';
       },
       logout: function() {
-        axios.get('/auth/logout').then(res => {
+        axios.get('/auth/logout3').then(res => {
           this.authError = '';
           console.log(res);
           const data = res.data;
@@ -101,8 +145,13 @@
             this.authPassword = '';
             this.authUsername = '';
             localStorage.removeItem('chatiqueue:token');
-          } 
+          } else {
+            this.errorMessage = data.message || 'Unknown error';
+          }
         });
+      },
+      addContact: function() {
+        this.contacts.push({ username: this.newContact, id: '1', new: 0 });
       }
     }
   })
