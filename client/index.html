@@ -3,22 +3,23 @@
 <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <title>ChatiQueue</title>
 </head>
 <div id="app">
-  <div class="filler"></div>
-  <div class="auth bb">
+  <div class="filler" v-if="notAuth"></div>
+  <div class="auth bb" v-if="notAuth">
     <div class="auth-tabs">
       <div class="auth-tab" v-on:click="switchTab('login')"  v-bind:class="{ active: (authTab == 'login') }"><p>Login</p></div>
       <div class="auth-tab" v-on:click="switchTab('signup')" v-bind:class="{ active: (authTab == 'signup') }"><p>Sign-up</p></div>
     </div>
     <div class="auth-form">
       <p>Username</p>
-      <input type="text" v-bind:value="authUsername">
+      <input type="text" v-model="authUsername">
       <p>Password</p>
-      <input type="password" v-bind:value="authPassword">
+      <input type="password" v-model="authPassword">
     </div>
-    <div class="auth-error">{{authError}}</div>
+    <div class="auth-error" v-if="authError.length !== 0"><p>{{authError}}</p></div>
     <div class="auth-submit" v-on:click="auth()"><p>YEAP!</p></div>
   </div>
   <nav>
@@ -36,10 +37,25 @@
       authUsername: '',
       authPassword: '',
       authError: '',
-      authTab: 'login'
+      authTab: 'login',
+      notAuth: true,
     },
     methods: {
       auth: function() {
+        const userData = {
+          username: this.authUsername,
+          password: this.authPassword
+        };
+        axios.post('/auth/' + this.authTab, userData).then(res => {
+          this.authError = '';
+          console.log(res);
+          const data = res.data;
+          if (data.success) {
+            this.notAuth = false;
+          }  else {
+            this.authError = data.message;
+          }
+        });
       },
       switchTab: function(tab) {
         this.authTab = tab;

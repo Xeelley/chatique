@@ -10,4 +10,9 @@ module.exports = {
             bufferMaxEntries: 0,
         }
     },
+    sessions: {
+        secret: 'yutbgfuhc4u95845ugi',
+        resave: true,
+        saveUninitialized: false
+    }
 };
