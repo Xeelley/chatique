@@ -1,6 +1,7 @@
 const express    = require('express');
 const expressApp = express();
 const config     = require('./config');
+const mongoose   = require('mongoose');
 const http       = require('http').Server(expressApp);
 const io         = require('socket.io')(http);
 const path       = require('path');
@@ -21,7 +22,29 @@ io.on('connection', socket => {
 });
 console.log(`[IO    ] connection started`);
 
+
 // START
-http.listen(config.port, () => {
-    console.log(`[SERVER] Server started on ${config.port} port`);
+const loadMongoDB = () => {
+    return new Promise((resolve, reject) => {
+        mongoose.connect(config.mongodb.uri, config.mongodb.settings)
+        .then(res => {
+            console.log('[MONGO ] Connection success');
+            return resolve();
+        })
+        .catch(err => {
+            console.log(err);
+            console.log('[MONGO ] Connection failed');
+            return reject();
+        });
+    });
+}
+const start = () => {
+    http.listen(config.port, () => {
+        console.log(`[SERVER] Server started on ${config.port} port`);
+    });   
+}
+
+loadMongoDB().then(() => {
+    start();
 });
+
