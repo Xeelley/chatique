@@ -99,4 +99,20 @@ nav {
       text-align: center;
       padding: 10px; }
 
+.profile {
+  background: #78909c;
+  height: 30px; }
+  .profile p {
+    font-size: 16px;
+    color: #fff;
+    padding: 5px 5px 0 0;
+    display: inline-block; }
+    .profile p.login {
+      font-weight: bold; }
+    .profile p.logout {
+      color: #ccc;
+      cursor: pointer; }
+      .profile p.logout:hover {
+        text-decoration: underline; }
+
 /*# sourceMappingURL=style.css.map */

@@ -127,3 +127,25 @@ nav {
         }
     }
 }
+
+.profile {
+    background: $secondary;
+    height: 30px;
+
+    p {
+        font-size: 16px;
+        color: #fff;
+        padding: 5px 5px 0 0;
+        display: inline-block;
+        &.login {
+            font-weight: bold;
+        }
+        &.logout {
+            color: #ccc;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}

@@ -14,5 +14,8 @@ module.exports = {
         secret: 'yutbgfuhc4u95845ugi',
         resave: true,
         saveUninitialized: false
+    },
+    strategy: {
+        key: 'huusajksddf34'
     }
 };

@@ -11,13 +11,24 @@ router.post('/signup', (req, res) => {
         if (userData.username.length < 5 || userData.username.length < 5) {
             return sendResponse(res, true, 'Username and password must contain 5+ characters');
         }
-        User.create(userData, (error, user) => {
-            if (error) {
-                return sendResponse(res, error, error.message);
+        User.findOne({ username: userData.username })
+        .then(user => {
+            if (user) {
+                return sendResponse(res, true, 'User with this username is already exist');
             } else {
-                req.session.userId = user._id;
-                return sendResponse(res);
+                User.create(userData, (error, user) => {
+                    if (error) {
+                        return sendResponse(res, error, error.message);
+                    } else {
+                        req.session.userId = user._id;
+                        const token = require('../modules/strategy').getToken(user._id);
+                        return sendResponse(res, null, { username: user.username, token });
+                    }
+                });
             }
+        })
+        .catch(err => {
+            return sendResponse(res, err, err.message);
         });
     } else {
         return sendResponse(res, true, 'Invalid data');
@@ -31,31 +42,28 @@ router.post('/login', (req, res) => {
                 return sendResponse(res, true, 'Wrong email or password');
             } else {
                 req.session.userId = user._id;
-                return sendResponse(res);
+                const token = require('../modules/strategy').getToken(user._id);
+                return sendResponse(res, null, { username: user.username, token });
             }
+        });
+    } else if (req.body.token) {
+        const userId = require('../modules/strategy').getUserIdByToken(req.body.token);
+        User.findById(userId)
+        .then(user => {
+            if (user) {
+                return sendResponse(res, null, { username: user.username, token: req.body.token });
+            } else {
+                return sendResponse(res, true, 'User not found');
+            }
+        })
+        .catch(err => {
+            return sendResponse(res, err, err.message);
         });
     } else {
         return sendResponse(res, true, 'Invalid data');
     }
 });
 
-// GET route after registering
-router.get('/profile', function (req, res, next) {
-  User.findById(req.session.userId)
-    .exec(function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        if (user === null) {
-          var err = new Error('Not authorized! Go back!');
-          err.status = 400;
-          return next(err);
-        } else {
-          return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
-        }
-      }
-    });
-});
 
 // GET for logout logout
 router.get('/logout', (req, res) => {

@@ -27,6 +27,13 @@
       <h1>ChatiQueue</h1>
     </div>
   </nav>
+  <div class="profile" v-if="!notAuth">
+    <div class="wrap">
+      <p>Logined as</p>
+      <p class="login">{{username}}</p>
+      <p class="logout" v-on:click="logout()">[Logout]</p>
+    </div>
+  </div>
 </div>
 <script>
   const socket = io();
@@ -39,6 +46,25 @@
       authError: '',
       authTab: 'login',
       notAuth: true,
+      username: '',
+    },
+    created: function() {
+      const token = localStorage.getItem('chatiqueue:token');
+      console.log(token);
+      if (token) {
+        axios.post('/auth/login', { token }).then(res => {
+          this.authError = '';
+          console.log(res);
+          const data = res.data;
+          if (data.success) {
+            this.notAuth = false;
+            this.username = data.message.username;
+            localStorage.setItem('chatiqueue:token', data.message.token);
+          }  else {
+            this.authError = data.message;
+          }
+        });
+      }
     },
     methods: {
       auth: function() {
@@ -52,6 +78,8 @@
           const data = res.data;
           if (data.success) {
             this.notAuth = false;
+            this.username = data.message.username;
+            localStorage.setItem('chatiqueue:token', data.message.token);
           }  else {
             this.authError = data.message;
           }
@@ -59,7 +87,23 @@
       },
       switchTab: function(tab) {
         this.authTab = tab;
+        this.authPassword = '';
+        this.authUsername = '';
       },
+      logout: function() {
+        axios.get('/auth/logout').then(res => {
+          this.authError = '';
+          console.log(res);
+          const data = res.data;
+          if (data.success) {
+            this.notAuth = true;
+            this.username = '';
+            this.authPassword = '';
+            this.authUsername = '';
+            localStorage.removeItem('chatiqueue:token');
+          } 
+        });
+      }
     }
   })
 </script>
