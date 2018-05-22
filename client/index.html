@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <title>ChatiQueue</title>
+</head>
+<div id="app">
+  <div class="filler"></div>
+  <div class="auth bb">
+    <div class="auth-tabs">
+      <div class="auth-tab" v-on:click="switchTab('login')"  v-bind:class="{ active: (authTab == 'login') }"><p>Login</p></div>
+      <div class="auth-tab" v-on:click="switchTab('signup')" v-bind:class="{ active: (authTab == 'signup') }"><p>Sign-up</p></div>
+    </div>
+    <div class="auth-form">
+      <p>Username</p>
+      <input type="text" v-bind:value="authUsername">
+      <p>Password</p>
+      <input type="password" v-bind:value="authPassword">
+    </div>
+    <div class="auth-error">{{authError}}</div>
+    <div class="auth-submit" v-on:click="auth()"><p>YEAP!</p></div>
+  </div>
+  <nav>
+    <div class="wrap">
+      <h1>ChatiQueue</h1>
+    </div>
+  </nav>
+</div>
+<script>
+  const socket = io();
+  
+  let app = new Vue({
+    el: '#app',
+    data: {
+      authUsername: '',
+      authPassword: '',
+      authError: '',
+      authTab: 'login'
+    },
+    methods: {
+      auth: function() {
+      },
+      switchTab: function(tab) {
+        this.authTab = tab;
+      },
+    }
+  })
+</script>
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link rel="stylesheet" href="./css/style.css">
+</html>
