@@ -78,10 +78,7 @@
       errorMessage: '',
       newContact: '',
       contacts: [
-        { username: 'Someone', id: '1', new: 0 },
-        { username: 'Harry', id: '1', new: 1 },
-        { username: 'Inokentii', id: '1', new: 0 },
-        { username: 'Snizhanna', id: '1', new: 2 },
+        // { username: String, new: Number, id: ObjectId }
       ],
       messages: [
         { text: 'Lorem-huerem', type: 'to' },
@@ -98,7 +95,6 @@
       if (token) {
         axios.post('/auth/login', { token }).then(res => {
           this.authError = '';
-          console.log(res);
           const data = res.data;
           if (data.success) {
             this.notAuth = false;
@@ -135,7 +131,7 @@
         this.authUsername = '';
       },
       logout: function() {
-        axios.get('/auth/logout3').then(res => {
+        axios.get('/auth/logout').then(res => {
           this.authError = '';
           console.log(res);
           const data = res.data;
@@ -151,11 +147,13 @@
         });
       },
       addContact: function() {
-        this.contacts.push({ username: this.newContact, id: '1', new: 0 });
+        socket.emit('chat:new', [ this.newContact, this.username ]);
+        this.newContact = '';
       }
     }
   })
 </script>
+<script src="js/socket.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link rel="stylesheet" href="./css/style.css">
 </html>

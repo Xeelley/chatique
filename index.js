@@ -52,13 +52,7 @@ const setRoutes = () => {
 }
 const setIO = () => {
     return new Promise((resolve, reject) => {
-        io.on('connection', socket => {
-            console.log(`[IO    ] + client: ${socket.id}`);
-        
-            socket.on('disconnect', () => {
-                console.log(`[IO    ] - client: ${socket.id}`);
-            });
-        });
+        io.on('connection', require('./io/connection'));
         console.log(`[IO    ] connection started`);
         return resolve();
     });
