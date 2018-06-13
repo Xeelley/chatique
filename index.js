@@ -68,3 +68,7 @@ loadMongoDB().then(() => {
     });
 });
 
+module.exports = {
+    io
+}
+

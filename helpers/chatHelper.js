@@ -1,11 +1,14 @@
 const Chat = require('../models/Chat');
 
-const getChatIDsForUser = username => {
+const getChatsForUser = username => {
     return new Promise((resolve, reject) => {
         Chat.find({ users: username }).then(chats => {
             let chatIds = [];
             chats.forEach(chat => {
-                chatIds.push(chat._id);
+                chatIds.push({
+                    id: chat._id,
+                    username: chat.users[0] === username ? chat.users[1] : chat.users[0]
+                });
             }, this);
             return resolve(chatIds);
         }).catch(err => {
@@ -48,7 +51,7 @@ const getChatID = (username1, username2) => {
 }
 
 module.exports = {
-    getChatIDsForUser,
+    getChatsForUser,
     createNewChat,
     getChatID
 };

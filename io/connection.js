@@ -1,13 +1,26 @@
 const Chat = require('../helpers/chatHelper');
 const User = require('../helpers/userHelper');
+const IO   = require('../index').io;
 
 module.exports = socket => {
+
     console.log(`[IO    ] + client: ${socket.id}`);
-        
     socket.on('disconnect', () => {
         console.log(`[IO    ] - client: ${socket.id}`);
     });
+    socket.emit('init');
 
+    socket.on('chats:get', username => {
+        Chat.getChatsForUser(username).then(chats => {
+            chats.forEach(chat => {
+                socket.emit('chat:created', chat);
+                socket.join(chat.id);
+            }, this);
+        }).catch(err => {
+            socket.emit('error', err);
+        });
+    });
+        
     socket.on('chat:new', usernames => {
         User.isUserExist(usernames[0]).then(exist => {
             if (!exist) {
@@ -16,17 +29,10 @@ module.exports = socket => {
                 return Chat.createNewChat(usernames[0], usernames[1]);
             }
         }).then(id => {
-            socket.emit('chat:new:res', Response(null, { username: usernames[0], id }));
+            socket.emit('chat:created', { username: usernames[0], id });
         }).catch(err => {
-            socket.emit('chat:new:res', Response(err));
+            socket.emit('error', err);
         });
     });
 }
 
-const Response = (err, data) => {
-    return {
-        success: err ? false : true,
-        data,
-        error: err ? (err.message || err || 'Unknown error') : null
-    };
-}

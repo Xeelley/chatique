@@ -172,6 +172,10 @@ nav {
           color: #fff; }
       .content .contact-list .contact.input {
         height: 70px; }
+      .content .contact-list .contact.active {
+        background: #607d8b; }
+        .content .contact-list .contact.active p {
+          color: #fff; }
   .content .chat {
     width: calc(100% - 252px);
     display: inline-block;

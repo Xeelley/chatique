@@ -45,7 +45,8 @@
         <div class="contact input">
           <input type="text" placeholder="Add contact..." v-model="newContact" v-on:keyup.enter="addContact()">
         </div>
-        <div class="contact hovered" v-for="contact in contacts">
+        <div class="contact hovered" v-for="contact in contacts" v-on:click="toggleChat(contact.id)"
+        v-bind:class="{ active: currentChat === contact.id }">
           <p class="username">{{contact['username']}}</p>
           <p class="new-messages" v-if="contact['new'] != 0">{{contact['new']}}</p>
         </div>
@@ -57,7 +58,7 @@
           </div>
         </div>
         <div class="message-input">
-          <input type="text">
+          <input type="text" v-model="currentMessage" v-on:keyup.enter="sendMessage()">
         </div>
       </div>
     </div>
@@ -81,13 +82,10 @@
         // { username: String, new: Number, id: ObjectId }
       ],
       messages: [
-        { text: 'Lorem-huerem', type: 'to' },
-        { text: 'Lorem-huerem', type: 'to' },
-        { text: 'Lorem-huerem', type: 'from' },
-        { text: 'Lorem-huerem', type: 'to' },
-        { text: 'Lorem-huerem', type: 'from' },
+        // { text: String, type: 'from'|'to' }
       ],
       currentMessage: '',
+      currentChat: null
     },
     created: function() {
       const token = localStorage.getItem('chatiqueue:token');
@@ -149,6 +147,13 @@
       addContact: function() {
         socket.emit('chat:new', [ this.newContact, this.username ]);
         this.newContact = '';
+      },
+      toggleChat: function(id) {
+        this.currentChat = id;
+        this.messages = [];
+      },
+      sendMessage: function() {
+
       }
     }
   })

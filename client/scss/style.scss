@@ -222,6 +222,12 @@ nav {
             &.input {
                 height: 70px;
             }
+            &.active {
+                background: $primary;
+                p {
+                    color: #fff;
+                }
+            }
         }
     }
 
