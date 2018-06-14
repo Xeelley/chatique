@@ -64,6 +64,7 @@
     </div>
   </div>
 </div>
+<script src="js/offline.js"></script>
 <script>
   const socket = io();
   
@@ -85,7 +86,8 @@
         // { text: String, type: 'from'|'to' }
       ],
       currentMessage: '',
-      currentChat: null
+      currentChat: null,
+      offline: false,
     },
     created: function() {
       const token = localStorage.getItem('chatiqueue:token');
@@ -154,11 +156,16 @@
         this.messages = [];
       },
       sendMessage: function() {
-        socket.emit('message:new', {
-          author: this.username,
-          message: this.currentMessage,
-          chatId: this.currentChat
-        });
+        if (!this.offline) {
+          socket.emit('message:new', {
+            author: this.username,
+            message: this.currentMessage,
+            chatId: this.currentChat
+          });
+        } else {
+          OffineMessages.add(this.currentMessage);  
+          this.errorMessage = 'Offline mode. Message has been saved successfully.';
+        }
         this.currentMessage = '';
       }
     }

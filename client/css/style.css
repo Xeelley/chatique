@@ -197,7 +197,8 @@ nav {
           border-radius: 2px;
           margin: 0 20px;
           padding: 5px;
-          display: inline-block; }
+          display: inline-block;
+          max-width: calc(100% - 50px); }
           .content .chat .message-box .message p.to {
             background: #78909c;
             color: #fff; }

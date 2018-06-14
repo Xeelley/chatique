@@ -3,6 +3,7 @@ socket.on('chat:created', chat => {
 });
 
 socket.on('init', () => {
+    app.contacts = [];
     socket.emit('chats:get', app.username);
 });
 
@@ -29,5 +30,22 @@ socket.on('message', message => {
                 }
             }
         }, this);
+    }
+});
+
+socket.on('connect_error', () => {
+    app.offline = true;
+    app.errorMessage = 'Connection error';
+});
+
+socket.on('connect', () => {
+    app.offine = false;
+    if (OffineMessages.get().length !== 0) {
+        socket.emit('message:many', {
+            author: app.username,
+            messages: OffineMessages.get(),
+            chatId: app.currentChat
+        });
+        OffineMessages.clear();
     }
 });

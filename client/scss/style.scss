@@ -255,6 +255,7 @@ nav {
                     margin: 0 20px;
                     padding: 5px;
                     display: inline-block;
+                    max-width: calc(100% - 50px);
                     // &.from { float: right; }
                     &.to { 
                         background: $secondary;

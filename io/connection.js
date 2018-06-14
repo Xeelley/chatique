@@ -42,5 +42,17 @@ module.exports = socket => {
             author: data.author
         });
     });
+
+    socket.on('message:many', data => {
+        console.log(data);
+        setTimeout(() => {
+            data.messages.forEach(message => {
+                IO.to(data.chatId).emit('message', {
+                    text: message,
+                    author: data.author
+                });
+            }, this);
+        }, 3000);
+    });
 }
 
