@@ -64,6 +64,7 @@ nav {
     left: calc(50% - 200px);
     top: 30vh;
     background: #fff;
+    z-index: 100;
 
     .auth-tabs {
         width: 100%;

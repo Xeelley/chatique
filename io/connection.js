@@ -29,9 +29,17 @@ module.exports = socket => {
                 return Chat.createNewChat(usernames[0], usernames[1]);
             }
         }).then(id => {
-            socket.emit('chat:created', { username: usernames[0], id });
+            socket.join(id);
+            IO.to(id).emit('chat:created', { username: usernames[0], id });
         }).catch(err => {
             socket.emit('error', err);
+        });
+    });
+
+    socket.on('message:new', data => {
+        IO.to(data.chatId).emit('message', {
+            text: data.message,
+            author: data.author
         });
     });
 }
